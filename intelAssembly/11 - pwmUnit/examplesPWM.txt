@@ -1,0 +1,123 @@
+; 200hz peryotlu yani 5 ms pwm
+; %25 duty
+; ayarlar
+; pwm modu=1
+; SGB(saat giris bölücü)=1
+; fsaat=fosc
+; fpwm=200hz
+; pwm cikisi p2.7
+; ------------------
+; fsaat=11.0592mhz
+; süre bakimindan her kare dalga 90.4ns
+; 200hz 5ms oldugundan
+; 5ms/90.4ns=55309d=d80dh pwm suresi
+; bu sayinin 4'te 1 %25 duty ayarlar
+; yani 3603h degeri
+
+	#include "aduc841.h"
+	ORG 	00h
+	SJMP     MAIN
+MAIN:
+	acall	pwm_cikis_ver
+bekle:
+	sjmp	bekle 			;sonsuz dongu
+;================================================================
+pwm_cikis_ver:
+	mov		acc,cfg841
+	clr		acc.6			;pwm cikisi p2.7 ayari
+	mov		cfg841,acc
+
+	mov		pwm1H,#0D8h
+	mov		pwm1L,#0dh		    ;200Hz pwm frekans ayari
+    mov		pwm0H,#36h
+    mov		pwm0L,#03h  		;Ton sure ayari % 25 duty
+
+	mov		acc,pwmcon
+	clr		acc.7			;belirlenen pinler pwm cikisi verecek.
+	clr		acc.6			;MD2
+	clr		acc.5			;MD1
+	setb	acc.4			;MD0 (  PWM  mode-1 secildi)
+	clr		acc.3			;CDIV1
+	clr		acc.2			;CDIV0 ( Carpan_fosc=1 secildi )
+	setb	acc.1			;CSEL1
+	setb	acc.0			;CSEL0  ( pwm saat girisi fosc secildi  )
+	mov		pwmcon,acc
+
+	RET
+END
+;-----------------------------------------------------
+; 1hz peryotlu yani 1sn pwm
+; bunun icin fsaat'i hesaplamaliyiz
+; saati yavaslatalim.
+
+; %25 duty
+; ayarlar
+; pwm modu=1
+; SGB(saat giris bölücü)=1
+; 
+; fpwm=1hz
+; pwm cikisi p2.7
+;------------------
+; fsaat=11.0592hmz/15*64 ayarlandi =11520hz
+; bir kare dalganin suresi 1/11520=86.6usn
+; 11520 kez 86.8 usn sayarsak 1s gecer.
+; fsaat i yavaslatmazsak bu degere ulamasamazdik
+; 11520d=2d00h
+; bu sayinin 4'te 1 %25 duty = 0b40h
+; bolme faktoru cfg841 den 64 olarak ayarladik
+
+;	#include"aduc841.h"
+;	ORG 	00h
+;	SJMP     MAIN
+;MAIN:
+;    acall	pwm_cikis_ver
+;bekle:
+;	sjmp	bekle 			;sonsuz dongu
+;;================================================================
+;pwm_cikis_ver:
+;	mov		acc,cfg841
+;	clr		acc.6			;pwm cikisi p2.7 ayari
+;	clr		acc.4
+;	clr		acc.3
+;	setb		acc.2           ; bolucu 64 oldu
+;	mov		cfg841,acc
+
+;	mov		pwm1H,#2dh
+;	mov		pwm1L,#00h		    ;1Hz pwm frekans ayari
+;    mov		pwm0H,#0bh
+;    mov		pwm0L,#40h  		;Ton sure ayari % 25 duty
+
+;	mov		acc,pwmcon
+;	clr		acc.7			;belirlenen pinler pwm cikisi verecek.
+;	clr		acc.6			;MD2
+;	clr		acc.5			;MD1
+;	setb		acc.4			;MD0 (  PWM  mode-1 seçildi)
+;	clr		acc.3			;CDIV1
+;	clr		acc.2			;CDIV0 ( Carpan_fosc=1 secildi )
+;	clr		acc.1			;CSEL1
+;	clr		acc.0			;CSEL0  ( pwm saat girisi fosc/(15*64) secildi  )
+;	mov		pwmcon,acc
+
+;	RET
+;END
+
+; dersteki orneklerin disinda ek bir ornek
+; 20hz peryotlu yani 50msn peryotlu pwm
+; bunun için fsaat'i hesaplamaliyiz
+; saati yavaslatalim.
+
+; %25 duty
+; ayarlar
+; pwm modu=1
+; SGB(saat giris bölücü)=64
+; fsaat=fosc
+; pwm cikisi p2.7
+;------------------
+; fsaat=11.0592hmz=> SGB=N'den gecerse 64'e bolunur
+; bir kare dalganin suresi 1/172800=5.787usn
+; kaç tane 5.787usn olursa 50msn olur ??
+; 50000usn/5.787usn=8640 kez
+; fsaat i yavaslatmazsak bu degere ulamasamazdik
+; 8640d=21c0h
+; bu sayinin 4'te 1 %25 duty = 2160d=0870h
+; bölme faktoru ile isimiz yok.

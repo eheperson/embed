@@ -1,0 +1,157 @@
+#include "ADUC841.H"
+
+
+// mikroislemci muhakkak bir sonsuz dongu icinde calismasi gereklidir
+
+//x:
+	// kodlar bu araya yazilacak
+	//sjmp 	x
+
+	org		0000h
+
+basla:
+
+
+	//*****IVEDI ADRESLEME ORNEKLERI*****
+		
+	mov		a,#02h
+	mov		20h,#20h
+	mov		r0,#0AAh
+	mov		DPTR,#1FE7h
+	mov		p0,#0CCh
+
+	//asagida ayni adreslere farkli degerler yazilmistir
+	//RAM SFR bolgesinden degisikler kontrol edilebilir
+	mov		a,#0A2h
+	mov		20h,#0A0h
+	mov		r0,#0FAh
+	mov		DPTR,#2FE9h
+	mov		p0,#0FFh
+	
+
+
+	mov		00h,#00001111b
+	mov		01h,#54d
+	mov		02h,#98h
+	mov		03h,#0ABh
+	mov		03h,#0Ch
+	// 03 adresinin içerigi degisir
+
+	
+	// su anda mikrosilemci ilk basladiginda
+	// bank0 dayiz
+	
+	mov		r0,#54h 		// buarasi 00h adresi ile ayni ram adresi
+	mov		r1,#10100011b	// binary ile de sayi girisi yapilabir
+	mov		20h,#23d		// decimal ile de sayi girisi yapilabir
+	
+	//bank1'e gecelim, PSW.3 ve PSW.4 nolu bitlerini degistirelim
+	setb	PSW.3 			// bank1 gecis yapildi
+	
+	// demek oluyorki PSW'nin bitlerine bit erisim kabul ediliyor
+	// bir ustteki kodda PSW.3 biti rs0 olarak adlandirilmisitir
+	// bir ustteki kodun yerine rs0'i birleyerek te yapabiliriz yani
+	
+	clr		PSW.3 			// tekrar bank0a gecis yapildi
+	
+	setb	rs0 			// = setb  PSW.3, tekrar bank1e gecis yapildi
+	
+	mov		r0,#23h 		// 008 adresi
+	// burada yine direk ram adresleri ile istenilen bolyegeye erisilebilir
+	// ancak r0 gibi isimlendirmelerde hangi bankta isek oradaki ram bolgesi degistirilir
+	
+	mov		12h,#66h   		// basska bankin adresine direkt erisebildik ancak
+	mov		r5,#34h 		// ile hangi bankta isek oranin icerigi degistirildi
+	
+	
+	mov		p0,#0F0h		// Portlara bayt adresleme yapabiliyoruz
+	
+
+	mov		DPTR,#01FEh		// DPTR'ye direkt 16 bit aktarabiliriz
+	
+	//*****DOGRUDAN ADRESLEME ORNEKLERI*****
+	mov		02h,a 			// 02h adresine a'nin icerigini yaz
+	mov		a,01h // 01 adresinin icerigini 01h adresine yazdik ancak
+	// asagidaki kod adres icerigini yazmaz. Direkt veridir
+	mov		a,#01h
+	
+	mov		30h,01h // adres icerigi diger adresinin icerigine aktarildi
+	
+	mov		r5,01h // handgi bankta isek o bankin r5 ine 01h adresinin icerigi aktarildi
+	
+	mov		p1,a   
+	mov		p0,01h
+
+
+
+	// bit tasima islemleri carry biti uzerinden yapiliyor carry biti psw'nin 7. bitidir.
+	mov		c,acc.6
+	mov		c,p0.1
+	mov		p0.2,c
+	
+	// ancak soyle bir kullanim yoktur
+	//mov		p0.1,psw.7
+	
+	mov		01h,c // bit bolgesi 01h adresine bit bit aktarildi
+	setb	07h
+	mov		c,07h  // bit bolgesi icerigi c'ye aktarildi
+	mov		p0.1,c	
+
+	//*****SAKLAYICI DOGRUDAN ADRESLEME ORNEKLERI*****
+	mov		a,r5 			// hangi bankta ise oradaki r1 icerigi akumulatore aktarilir
+
+	setb	rs0
+	mov		r0,a 			// banka dikkat et.
+
+
+
+	;DOLAYLI ADRESLEME ornekleri
+	// dolayli adresleme icin sadece r0 ve r1 kullaniliyor
+
+
+	
+	// bir ustteki kodu asagidaki sekilde de yapabilirz
+	mov	psw,#00h
+	
+	mov		r0,#02h
+	mov		03h,#33d
+	
+	mov		a,@r0
+	mov		03h,@r0
+	
+	setb 	rs0
+	setb 	rs1 ; bank3e gectik
+	
+	mov		a,@r0
+	mov		03h,@r0
+	
+	; DOLAYLI ADRESLEME RAM SIFIRLAMA
+	// djnz komutu kullanilacak
+	mov	psw,#00h			// bank0 da olmamiz gerekli Yani
+	
+	mov		r0,#7fh 		// 00h adresinde 128 yaziyoruz
+	mov		a,#00h
+dng:
+	mov		@r0,a
+	djnz	r0,dng			; eger r0 icerigi 0 degilse dng'e dallan
+	// en son djnz komutunda r0=00h olarak kalir yani 00h adresi 0 verisine ulasilir
+	// ve bir alttaki kod isler
+	
+	; ------------------------------------------------------------
+	//*****SAKLAYICI INDISLI ADRESLEME ORNEKLERI*****
+	// PROGRAM HAFIZA Icerigine erismek icin kullanilir
+	mov		a,#04h
+	mov		DPTR,#1000h
+	movc	a,@a+DPTR
+	mov		p0,a
+	// sjmp 	basla
+	// istediginiz bir program hafiza bolgesine istediginiz verileri yazabilirsiniz
+	// ornegin alt tarafta program hazfizanin 1000,1001,1002,1003 ve 1004 adreslerine 
+	// rastgele sayilar atanmistir
+	
+	org 	1000h
+	sayi: 	db 0,1,2,3,4
+
+	ljmp basla
+
+end

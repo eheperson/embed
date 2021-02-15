@@ -1,0 +1,3 @@
+".\Objects\STARTUP.obj" 
+TO ".\Objects\aritmeticOperations" 
+PRINT(".\Listings\aritmeticOperations.m51")

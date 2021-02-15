@@ -1,0 +1,406 @@
+ #include <aduc841.h>
+
+
+; ders notlari kesme bolumunde 1000 urun gecisi
+; hakkindaki ilk ornegi ilk once kesme olmadan sadece
+; timer kullanarak gerceklestirelim
+; burada p3.4'ten gelen 0'dan 1'e gecislerde bir kutu geciyor
+; kutu gecene kadar p3.4 lojik 1 olarak kaliyor.
+; ikinci 0'dan 1'e geciste, ikinci kutu geciyor anlasilir.
+; 1000 kutu oldugunda p2.0 daki led yanip sonecek.
+; p3.4 oldugu icin t0 kullanilmasi gereklidir.
+; 1000 kutu icin tl0 ve th0 = 65535-1000=64535(fc17h) den baslamasi gerekecek.
+; peripheralsden port3 ac, p3.4 1 yap ve 0 yap
+; her 1'den 0'a gecince timer0'dan tl0 degisimini gozlemle.
+
+	;;org		0000
+	;;sjmp	basla
+;;basla:	
+
+	;;mov		tmod,#00000101b
+					  ;;; timer 0; gt=0 
+                      ;;; c/t=1 sayici, zamanlayici degil
+                      ;;; 01 mod 1 = 16 bit sayici 
+	;;mov		tl0,#0fch ;normalde #17h  
+	;;mov		th0,#0ffh ;normalde 0fch , deneme icin 4 kez saysin diye fffc dedik.
+	;;clr		p2.0
+	;;setb 	tr0
+;;x:	jnb	tf0,x  ; p3.4'ten 1000 kutu oldugunda tf0=1 olur. 
+			   ;;; aksi takdirde bu satirda doner.
+	;;clr		tf0 ; tf0=1 oldugunda otomatik olarak th0=> tl0 olur.
+	;;setb	p2.0
+	;;nop
+	;;nop
+	;;clr		p2.0
+	;;mov		tl0,#0fch ;normalde #17h  
+	;;mov		th0,#0ffh ;normalde 0fch , deneme icin 4 kez saysin diye fffc dedik.
+	;;sjmp	x	
+	;;end
+	
+	; not bir onceki derste tr0=1 yapilmisti
+	; aslinda gerek yok. zaten timer calisiyor.
+;-------------------------------------------
+ ;ayni ornegi t0 kesmesi ile yapalim.
+ ;ders notlarindaki ornektir.
+	;;org		0000
+	;;sjmp	basla
+	;;org		000bh
+	;;sjmp	sayicifonksiyonu
+;;basla:
+	;;mov		tmod,#00000101b ; p3.4 sayilacak. yukaridaki ornekteki ayarlar yapildi.
+							;;; ancak 
+	;;mov		dptr,#65532d ; istenirse bir ustteki gibi de tl0 ve th0 yapilabilirdi. 
+											;;; normalde 1000 icin dptr=64535d olacakti
+	;;mov		tl0,dpl      ; tl0=17h, th0=0fch denebilir
+	;;mov		th0,dph      ; bu kullanim daha basit
+	;;setb	et0			 ; t0 kesmesi aktif edildi
+	;;setb	ea			 ; kesme olayi calisacak denildi.
+	                     ;;; hangi kesme olayi kullanilirsa kullanilsin
+						 ;;; ea=1 yapilmalidir.
+	;;setb	tr0			 ; timer saymaya baslasin.
+;;x:	
+	;;nop
+	;;; diger islemler burada calisabilir.
+	;;; ne zaman tf0=1 olursa, kesme olayi calisir
+	;;; aktif kod calisir ve buradaki kod birakilir
+	;;; kesme olayina gidilir
+	;;; kesme olayi bitince bu sonsuz dongude nerede kaldiysa
+	;;; kaldigi yerden devam edilir
+	;;nop
+	;;nop
+	;;sjmp	x			 ; sonsuz 
+
+;;sayicifonksiyonu:
+	;;; kesme fonksiyonu olunca otomatik olarak tf0=0 olur.
+	;;setb	p2.0
+	;;nop
+	;;clr		p2.0
+	;;mov		tl0,dpl
+	;;mov		th0,dph
+	;;reti  ; ONEMLI RETURN INTERRUPT KOMUTU ILE
+	      ;;; SONSUZ DONGUDEKI KALDIGI YERE DONME KOMUTU
+	;;end
+;-----------------------------------------------------------------
+; ders notlarindaki kesme bolumundeki ikinci ornegi kesmesiz yapalim
+; p2.0 da 2 ms lik peryotlarda kare dalga uretelim
+; yani 1ms de bir p2.0 toggle yapalim
+; 1ms icin 1000000/90.4=11062 cycle sayilmasi gerekecek
+; yani mikroislemci t0 65535-11062=54473 baslamasi gerecektir.
+; 54473 d= d4c9 h'dir.
+	;;org		0000
+	;;sjmp	basla
+;;basla:	
+	;;mov		tmod,#01h; t0 kullanilacak, gate=0, ct=0 sayici; mod 1
+	;;mov		dptr,#54473d
+	;;mov		dptr,#64473d
+	
+	;;mov		tl0,dpl
+	;;mov		th0,dph
+	;;clr		p2.0
+	;;setb	tr0
+;;x:	jnb		tf0,x ; 1 ms dolunca yani 11062 cycle suresi gecince tf0=1 olur
+	;;clr		tf0
+	;;mov		tl0,dpl
+	;;mov		th0,dph
+	;;cpl		p2.0
+	;;sjmp	x
+	;;end
+;---------------------------------------------------------------
+ ;ayni ornegi t0 kesmesi ile yapalim.
+ ;ders notlarindaki ornekten alinabilir
+	;;org		0000
+	;;sjmp	basla
+	;;org		000bh
+	;;sjmp	timer0
+;;basla:
+	;;mov		tmod,#01h
+	
+	;;;;mov		dptr,#54473d	;dogru deger bu
+	;;mov		dptr,#65473d	;basitce sonuc almak icin bu deger kullanildi
+	;;mov		tl0,dpl
+	;;mov		th0,dph
+	;;clr		p2.0	
+	;;setb	et0			; timer 0 kesmesi aktif
+	;;setb	ea			; kesmeler calisabilir
+	;;setb	tr0			; timer calisti
+;;x:	
+	;;nop
+	;;; diger islemler burada calisabilir.
+	;;; ne zaman tf0=1 olursa, kesme olayi calisir
+	;;; aktif kod calisir ve buradaki kod birakilir
+	;;; kesme olayina gidilir
+	;;; kesme olayi bitince bu sonsuz dongude nerede kaldiysa
+	;;; kaldigi yerden devam edilir
+	;;nop
+	;;nop
+	;;sjmp	x
+;;;; kesme fonksiyonu burada
+;;timer0:	
+	;;; otomatik olarak kesmede tf0=0 olur
+	;;mov		tl0,dpl
+	;;mov		th0,dph
+	;;cpl		p2.0
+	;;reti
+	;;end
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+  CONTINUE FROM HERE 
+ ---------------------------------------------------------------------------
+ ---------------------------------------------------------------------------
+;-----------------------------------------------------------------
+; ders notlari 3. kesme ornegini kesmesiz gerceklestirelim
+; notlardaki ornek 8051 12 mhz icin
+; bizim aduc icin 50ms fazla oluyor.
+; o yuzden burada 5 ms icin ornek yapilmistir.
+; kutu boyu 5ms uzeri ve alti tespit edilecek.
+; p3.3'e 1 gelirse bir cisim gelmis demektir.
+; p3.3=1 oldugu surece timer baslayacak.
+; p3.3 timer 1'i aktif edebilir. bu durumda gate=1 olmasi gerekecek.
+; ne zmn p3.3=1 ise timer calisabilir. (tr1=1 oldugu surece)
+; p3.3=0 oldugu anda cismin boyu timerdan belirlenebilir.
+; ancak bu durumda ana dongude p3.3 hep kontrol edilmesi gerekecek
+; 5ms=5milyon ns/90.4 ns=55310 (d80e) cycle sayilmasi gerekecek
+; yani timer 0 dan baslayacak 55310 dan kucuk mu buyuk mu testi yapacagiz.
+; 5 ms alti icin p2.0=1
+; 5ms ustu icin p2.1=1
+	;org		0000
+	;sjmp	basla
+;basla:
+	;mov		tmod,#10010000b ; t1,disardan gelen p3.3=1 ile calisir
+							;; ve p3.3=1 oldugu surece timer calisir
+							;; p3.3=0 oldugunda sayma islemi durur.
+	;mov		tl1,#0h
+	;mov		th1,#0h
+	;setb	tr1             ; bu durumda daha timer 1 baslamadi;
+							;; p3.3=1 olmasi durumunda timer baslar ve
+							;; sayma islemi arka tarafta devam eder.
+;x:							; ornegin bir anda bir kutu geldi p3.3=1
+							;; zamanlayici baslar
+	;; peki bu durumda bir kutunun gelip gelmedigini nerden anlariz.
+	;; eger tl0 yada th0'dan 0 dan farki ise bir kutu geldigi anlasilabilir
+	;; ilk once tl0 ve th0 kontrol edelim
+	;mov		a,th1
+	;cjne	a,#0d,x1
+	;mov		a,tl1
+	;cjne	a,#0d,x1
+	;sjmp	x
+;x1:
+	;; buraya geldiyse sayici sayiyor anlamina gelir
+	;; kutu gelmis demektir.
+	;; kutunun bittigi bir kac sekilde anlasilabilir
+	;; ben p3.3=0 mi diye test edecegim
+	;k: jb	p3.3,k ; bir oldugu sürece burada kalir, kutu daha bitmedigi anlasilir; timer saymaya devam eder
+	               ;; bir alt koda gecince kutu gecisi bitmistir demektir
+				   ;; burada 5 ms kontrolu yapalim. buyukmu kucukmu??
+				   ;; aslinda burada tf0 kontrolu yapsak iyi olur ancak cok 
+				   ;; karmasik bir yapi olmamasi acisindan yapmadim.
+	   ;mov	dptr,#55310d ;d80e
+	   ;mov	00h,tl1 ;timer degeri alindi
+	   ;mov	a,th1   ; timer degeri alindi
+	   ;mov		tl1,#0h ; en sona da yazilabilirdi.
+	   ;mov		th1,#0h
+	   ;clr	c
+	   ;subb	a,dph   ; th1-5ms(high kismi) ; c=1 ise negatif olmustur, yani 50ms'den kucuk olur
+					;; eger c=0 ise, yuksek kisimlarin cikartimi 0 mi? yoksa baska deger mi?
+	   ;jc	x3      ; c=1 ise x3 git, yani sonuc negatif
+	   ;jnz	x4		; a=0 degilse, yani sonuc pozitifse x4 git, eger 0 ise dusuk kisimlari cikartalim
+	   ;mov	a,00h   ; timerin dusuk kismi alindi.	
+	   ;subb	a,dpl   ; dusuk kisimlarini cikarttim.
+	   ;jc	x3      ; c=1 ise sonuc x3 git, yani sonuc negatif, aksi takdirde sonuc pozitif x4 git.
+;x4:	   setb	p2.0
+	   ;nop
+	   ;clr	p2.0
+	   ;sjmp	x	
+	   
+;x3:    ; c=1 olmus sonuc
+	   ;setb	p2.1
+	   ;nop
+	   ;clr	p2.1
+	   ;sjmp x
+   
+	;end
+;---------------ayni ornek kesmesiz ve baska kodlar kullanalim.-------
+; subb yerine cjne kullanalim
+; cjne byte1,byte2,baslik kendi icinde aslinda cikartma yapar
+; eger byte1<byte2 ise c=1 olur
+; yukaridaki yapilan sekilde ayrica jnz komutunu kullandik burada
+; ona gerek kalmayacak, zaten cjne o testi yapmis sayilir
+	;org		0000
+	;sjmp	basla
+;basla:
+	;mov		tmod,#10010000b ; t1,disardan gelen p3.3=1 ile calisir
+							;; ve p3.3=1 oldugu surece timer calisir
+							;; p3.3=0 oldugunda sayma islemi durur.
+	;mov		tl1,#0h
+	;mov		th1,#0h
+	;setb	tr1             ; bu durumda daha timer 1 baslamadi;
+							;; p3.3=1 olmasi durumunda timer baslar ve
+							;; sayma islemi arka tarafta devam eder.
+;x:							; ornegin bir anda bir kutu geldi p3.3=1
+							;; zamanlayici baslar
+	;; peki bu durumda bir kutunun gelip gelmedigini nerden anlariz.
+	;; eger tl0 yada th0'dan 0 dan farki ise bir kutu geldigi anlasilabilir
+	;; ilk once tl0 ve th0 kontrol edelim
+	;mov		a,th1
+	;cjne	a,#0d,x1
+	;mov		a,tl1
+	;cjne	a,#0d,x1
+	;sjmp	x
+;x1:
+	;; buraya geldiyse sayici sayiyor anlamina gelir
+	;; kutu gelmis demektir.
+	;; kutunun bittigi bir kac sekilde anlasilabilir
+	;; ben p3.3=0 mi diye test edecegim
+	;k: jb	p3.3,k ; bir oldugu sürece burada kalir, kutu daha bitmedigi anlasilir; timer saymaya devam eder
+	               ;; bir alt koda gecince kutu gecisi bitmistir demektir
+				   ;; burada 5 ms kontrolu yapalim. buyukmu kucukmu??
+				   ;; aslinda burada tf0 kontrolu yapsak iyi olur ancak cok 
+				   ;; karmasik bir yapi olmamasi acisindan yapmadim.
+	   ;mov	dptr,#55310d ;d80e
+	   ;mov	00h,tl1 ;timer degeri alindi
+	   ;mov	a,th1   ; timer degeri alindi
+	   ;mov	tl1,#0h ; en sona da yazilabilirdi.
+	   ;mov	th1,#0h
+	   ;cjne	a,dph,x2 ; eger sonuc farkli ise x2 ye git, carry testi yap.
+                     ;; sonuc esitse dusuk timer kisimlarini test et
+	   ;mov	a,00h
+       ;cjne a,dpl,x2 ; eger sonuc farkli ise carry testi yap.
+					 ;; eger sonuc esitse kutu boyutu tam 5ms'dir.
+;yak_p20:
+	   ;setb	p2.0
+	   ;nop
+	   ;clr	p2.0
+	   ;sjmp x	
+;x2:    jc	yak_p20  ; c=1 ise 5 ms'den kucuktur, p2.0=1 yap.
+ 	   ;setb	p2.1
+	   ;nop
+	   ;clr	p2.1
+	   ;sjmp x	      
+	;end
+;--------------ayni ornek -- kesmeli yapalim--------------------------
+; bu daha guzel bir cozum, ders notlarinda var.
+; ilk once donanimi bilmek lazim
+; 1. olarak p3.3=1 iken timer1 calisir ve sayar
+; 2. olarak p3.3 dusen kenarda harici kesme olusturabilir.
+; ornegimizde o zaman bir kutu gelirse timer1 baslatabiliriz
+; ayrica kutu gecisi bittigi anda bir de kesme olusabilir. (kutu gecisi bittigi anda 1'den 0 gecis olur)
+; o zaman bu noktada timer surelerini alip karsilastirma yapabiliriz.
+	;org		0000
+	;sjmp	basla
+	;org		0013h
+	;sjmp    kesme1
+;basla:
+	;mov		tmod,#10010000b ; t1,disardan gelen p3.3=1 ile calisir
+							;; ve p3.3=1 oldugu surece timer calisir
+							;; p3.3=0 oldugunda sayma islemi durur.
+	;mov		tl1,#0h
+	;mov		th1,#0h
+	;setb	ex1  		   ; harici kesme aktif; 
+	;setb	it1 		   ; dusen kenar kesmeli,	p3.3=1 den 0 gecis kesme olusturacak
+	;setb	ea             ; kesmeler calisabilir.
+	;clr		ie1			   ; keil da dene yapabilmek icin eklendi. normalde gerek yok burada.	
+	;clr		p2.0
+    ;clr		p1.0
+	;mov		dptr,#55310d
+    ;setb	tr1	
+;x:
+	;nop
+	;nop
+	;; ve bu arada p3.3=1 olunca timer da arka tarafta
+	;; calismaya baslayacak
+	;; harici kesme geldiginde (kutu gecisi bittigi anda), zaten p3.3=0 olacagindan timer da duracak
+	;; o anda harici kesmede karsilastirmalari yapacagiz.
+	;sjmp	x
+	
+;kesme1:
+	;mov		00h,tl1 ; su anki sure alindi
+	;mov		a,th1   ; su anki sure alindi
+	;mov		tl1,#0h
+	;mov		th1,#0h	
+	;cjne	a,dph,x1 ; eger sonuc farkli ise x1 git, carry testi yap.
+					 ;; sonuc esitse dusuk timer kismini test et	
+    ;mov		a,00h
+	;cjne	a,dpl,x1 ; eger sonuc farkli ise carry testi yap.
+					 ;;; eger sonuc esitse kutu boyutu tam 5ms'dir.
+;yak_p20:
+	   ;setb	p2.0
+	   ;nop
+	   ;clr	p2.0
+	   ;reti	
+;x1:    jc	yak_p20  ; c=1 ise 5 ms'den kucuktur, p2.0=1 yap.
+ 	   ;setb	p2.1
+	   ;nop
+	   ;clr	p2.1
+	   ;reti     
+	;end
+;------------------------------------------------------------------;
+; ayni ornegin en iyi cozumu
+; hem timer1 kesmesi hem de harici kesme 1 olacak
+; onceki 3 cozumde timer dolup tekrardan 0 dan devam edecek. bu bir bug'dir.
+; yani yukaridaki 3 ornekte kutularin 65535 saykildan kucuk oldugu kabul edildi
+; cozumu orada baska sekilde yapabilirdik. ancak karmasiklik icin yapilmadi
+; isterseniz siz oradaki kisma tf0 icin kod yazip cozebilirsiniz.
+; o zmn 5ms=5milyon ns/90.4 ns=55310 (d80e) cycle sayilmasi gerekecek
+; timer1'i 65535-55310=10225'den (27f1 h) baslatalim.
+; zaten 5ms gecince (55310 cycle olunca) timer kesme uretsin. direk buyuktur butonunu tiklayalim 
+; aksi takdirde harici kesme oldugunda bir degiskten kontrol edecegiz. (bit bolgesi 00h )
+; yine timerin calismasi p3.3 bagli olacak
+; p3.3=1 oldugu surece timer calisacak
+; ne zaman p3.3=1 den 0'a gecince harici kesme olacak.
+; 5 ms alti icin p2.0=1
+; 5 ms ustu icin p2.1=1
+	org		0000h
+	sjmp	basla 
+	org		0013h
+	ajmp    harici1kesme
+	org		001Bh
+	ajmp	timer1kesmesi
+
+basla:
+	mov		tmod,#10010000b ; t1,disardan gelen p3.3=1 ile calisir
+							; ve p3.3=1 oldugu surece timer calisir
+							; p3.3=0 oldugunda sayma islemi durur.
+	mov		dptr,#10225d
+	mov		tl1,dpl
+	mov		th1,dph
+	setb	et1			   ; zamanlayici/sayici kesmesi aktif
+	setb	ex1  		   ; harici kesme aktif; 
+	setb	it1 		   ; dusen kenar kesmeli,	p3.3=1 den 0 gecis kesme olusturacak
+	clr		ie1			   ; keil da dene yapabilmek icin eklendi. normalde gerek yok burada.	
+	setb	ea             ; kesmeler calisabilir.
+	;setb	pt1			   ; zamanlayici kesmesi oncelikli	
+	clr		p2.0
+	clr		p2.1
+	setb	tr1			   ; timer calisti
+	clr		00h 	 	   ; bit bolegesi 00h silindi	
+x: 
+    ; buradaki sonsuz dongude p3.3=1 olmussa timer calisiyor demektir.
+    ; burada p3.3=1'den 0 gecince harici kesme olusur
+    ; burada timer 65535+1 olunca timer kesmesi olusur
+      ; bu durumda zaten kutu boyutu>=5ms'dir	
+	sjmp x
+
+timer1kesmesi:
+	setb	00h 	; kutu>=5ms'dir.
+				    ; kutu gecisi bittiginde dis kesmede led ayarlarini yapacagiz.
+	reti
+	
+harici1kesme:
+	; dis kesme geldi
+	mov		tl1,dpl
+	mov		th1,dph
+	jnb		00h,uygun   ; bit bolgesi 00h=0 ise kutu boyutu kucuk
+						; aksi takdirde kutu buyuk
+	clr		00h         ; islemler basa doneceginden bit bolgesi 00h temizle
+	setb	p2.1
+	nop
+	clr		p2.0
+	reti
+uygun:	
+	setb	p2.0
+	nop
+	clr		p2.0
+	reti
+	end

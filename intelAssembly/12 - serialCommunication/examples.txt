@@ -1,0 +1,113 @@
+; karsi taraftaki mikroislemci ya da bilgisayara durmadan A karakteri gönderiyor.
+#include "at89x51.h"
+
+		org		0000
+MAIN:
+		MOV		TMOD,#20H ; oto yüklemeli timer 1
+		MOV		SCON,#50H ; 8BIT, 1 STOP, REN aktif
+		MOV		TL1,#0FDH ; 9600 baud rate    ; aduc olunca bu deger= #0DCH
+		MOV		TH1,#0FDH ; dikkat bu standart 8051 ayaridir. ; aduc841 olunca bu deger= #0DCH
+
+		SETB	TR1
+WAIT:   MOV		SBUF,#41h ;yada     MOV	SBUF,#'A'
+		JNB		TI,$
+		CLR		TI
+
+		SJMP 	WAIT 
+		end
+			
+			
+ ;karsi taraftaki PC ya da mikroislemciden 'A' gelmis is karsiya'B' cevabi gonder
+;#include "at89x51.h"
+
+		;org		0000
+;MAIN:
+		;MOV		TMOD,#20H
+		;MOV		SCON,#50H ; 8BIT, 1 STOP, REN aktif
+		;MOV		TL1,#0FDH
+		;MOV		TH1,#0FDH
+
+		;SETB	TR1
+;DONGU:
+		;JNB		RI,$    ; VERI GELENE KADAR BEKLE, VERI GELINCE R1=1 OLUR
+		;CLR		RI
+
+		;MOV		A,SBUF
+		;; GELEN VERININ A OLUP OLMADIGI TEST EDILSIN
+		;CJNE	A,#'A',DONGU
+		;MOV		SBUF,#'B'
+		;JNB		TI,$    ; VERI GIDENE KADAR BEKLE
+		;CLR		TI
+		
+		;SJMP	DONGU
+	;END
+
+
+
+
+		
+; BIRINCI MIKROISLEMCI
+; P1.1 BAGLI BUTONA BASIP CEKINCE KARSIYA 'A' GONDERELIM
+; KARSIDAN 'B' GELINCE P1.2 YE BAGLI LEDI YAKALIM
+
+;#include "at89x51.h"
+
+		;org		0000
+;MAIN:
+		;CLR		P1.2
+		;MOV		TMOD,#20H
+		;MOV		SCON,#50H ; 8BIT, 1 STOP, REN aktif
+		;MOV		TL1,#0FDH
+		;MOV		TH1,#0FDH
+
+		;SETB	TR1
+;DONGU:
+		;JB		P1.1,X
+		;JNB		P1.1,$; BASIP CEKTIK
+			
+		;MOV		SBUF,#'A'
+ 		;JNB		TI,$
+		;CLR		TI
+		;// SIMDI CEVAP BEKLEYELIM 'B' GELECEK, BASKA BIRSEY GELDIYSE LEDI YAKMA
+		;JNB		RI,$
+		;CLR		RI
+		;MOV		SBUF,P0
+		;MOV		SBUF,#'B'
+		;MOV		A,SBUF
+		;CJNE 	A,#'B',X
+		;SETB	P1.2
+		
+		
+;X:		SJMP	DONGU
+	;END
+	
+	
+	
+	
+	
+; IKINCI MIKROISLEMCI
+
+; KARSIDAN 'A' GELINCE 'B' GONDERELIM
+
+;#include "at89x51.h"
+		;org		0000
+;MAIN:
+		;MOV		TMOD,#20H
+		;MOV		SCON,#50H ; 8BIT, 1 STOP, REN aktif
+		;MOV		TL1,#0FDH
+		;MOV		TH1,#0FDH
+
+		;SETB	TR1
+;DONGU:
+		;// KARSIDAN VERI BEKLEYELIM
+		;JNB		RI,$
+		;CLR		RI
+		;MOV		A,SBUF
+		;clr		p1.0
+		;; A GELMIS ISE B GONDER
+		;CJNE	A,#'A',X
+		;MOV		SBUF,#'B'
+		;JNB		TI,$  ; GONDERILMESINI BEKLE
+		;CLR		TI
+;X:		SJMP	DONGU
+	;END

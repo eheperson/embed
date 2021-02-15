@@ -1,0 +1,126 @@
+#include "ADUC841.h"
+
+;DAC ORNEKLERI
+
+
+;---------------------------------------------------------------------------
+; dac 1. ÖRNEK
+; asagida DACCON ayarinda dahali ref seçilmis, bu nedenle ADC enerjilendirilmelidirki dac Vref'ten gerilim alabilsin
+; DAC  12 bit olarak ayarlanmis = 12 bit 4095d degerindedir.
+; Vref=2.5 Volt, 4095-->> 2.5Volt olur
+; 1.25 Volt için 2048 DAC0L/DAC0H yüklenmesi gerekir.
+	;org 	0000h
+;BASLA:
+	;MOV 	ADCCON1, #10000000b
+	;MOV 	DACCON, #00001101b  ; mode=0 12 bit -- rng1=0(Vref=2.5V) -- rng0=0(Vref) -- clr1=0 --  clr0=1 --  sync=1 -- pd1=0 --  pd0=1(enerji)
+	;MOV 	DPTR,#1024d
+	;MOV 	DAC0H, DPH
+	;MOV 	DAC0L,DPL
+
+
+	;x:		sjmp	x
+
+;END
+
+
+;---------------------------------------------------------------------------
+; dac 2. ÖRNEK
+; asagida DACCON ayarinda dahali ref seçilmis, bu nedenle ADC enerjilendirilmelidirki dac Vref'ten gerilim alabilsin
+; DAC  8 bit olarak ayarlanmis = 8 bit 255d degerindedir.
+; Vref=2.5 Volt, 255-->> 2.5 Volt olur
+; 1.25 Volt için 2048 DAC0L/DAC0H yüklenmesi gerekir.
+	;org 	0000h
+;BASLA:
+	;MOV 	ADCCON1, #10000000b
+	;MOV 	DACCON, #10001101b  ; mode=1 8 bit -- rng1=0(Vref=2.5V) -- rng0=0(Vref) -- clr1=0 --  clr0=1 --  sync=1 -- pd1=0 --  pd0=1(enerji)
+	;MOV 	DAC0L,#128d
+	;x:		sjmp	x
+;END
+
+
+;---------------------------------------------------------------------------
+; dac 3. ÖRNEK
+; asagida DACCON ayarinda harici ref seçilmis
+; DAC  12 bit olarak ayarlanmis = 12 bit 4095d degerindedir.
+; V_harici_ref=4 Volt, 4095-->> 4 Volt olur
+; 1Volt için 4095/4=1024 DAC0L/DAC0H yüklenmesi gerekir.
+
+	;org 	0000h
+;BASLA:
+	;//MOV 	ADCCON1, #10000000b
+	;MOV 	DACCON, #00101101b  ; mode=0 12 bit -- rng1=0(Vref=2.5V) -- rng0=1(Harici REF) -- clr1=0 --  clr0=1 --  sync=1 -- pd1=0 --  pd0=1(enerji)
+	;MOV		DPTR,#1024D
+	;MOV		DAC0H,DPH
+	;MOV 	DAC0L,DPL
+	;x:		sjmp	x
+
+;END
+
+
+
+;---------------------------------------------------------------------------
+; dac 4. ÖRNEK
+; asagida DACCON ayarinda harici ref seçilmis
+; Sekronizasyon modu kullanilmis sync=0 
+
+;SYNC Temizlendiginde, her iki DAC senkron calisma moduna girer. Bu modda, öncelikle
+;DACiL/H kaydedicilerine veri aktarilir; daha sonra da SYNC biti lojik ‘1’yapilarak her
+;iki DAC çikisi ayni anda güncellenmis olur.
+
+; 1 Voltluk ve 0.5 Voltluk çikis ayarlanmis
+
+; DAC  12 bit olarak ayarlanmis = 12 bit 4095d degerindedir.
+; V_harici_ref=4 Volt, 4095-->> 4 Volt olur
+
+; 1   Volt için 4095/4=1024 DAC0L/DAC0H yüklenmesi gerekir.
+; 0.5 Volt için 4095/8=512d DAC1L/DAC1H yüklenmesi gerekir.
+
+	org 	0000h
+BASLA:
+	MOV 	DACCON, #01111011b  ; mode=0 12 bit -- rng1=1(Harici REF) -- rng0=1(Harici REF) -- clr1=1 --  clr0=1 --  sync=0 -- pd1=1 --  pd0=1(enerji)
+	MOV		DPTR,#1024D
+	MOV		DAC0H,DPH
+	MOV 	DAC0L,DPL
+	
+	MOV		DPTR,#512D
+	MOV		DAC1H,DPH
+	MOV		DAC0L,DPL
+	
+	ORL		DACCON,#00000100b;  sync=1 yapildigi anda cikislar guncellenir.
+	x:		sjmp	x
+
+END
+	
+	
+	
+	
+;VDD=3.3V için çikisa 1.5V
+;yazilmak isteniyor:
+;4095*(1.5/3.3)=1861=0745H
+;Çikisa 0745H kelimesi yazilmalidir
+
+
+;ÖRNEK: DAC0, 12 bitlik datayi çikisa verecektir. Çikis gerilimi siniri 0-AVDD arasinda
+;olacaktir. Senkronizasyon, gerilim degerinin düsük anlamli saklayicisina (DACL) bir
+;deger yazildigi zaman olacaktir. DACCON saklayicisina uygun degeri yaziniz.
+;MOV ADCCON1, #80H
+;MOV DACCON, #2DH 00101101
+
+;ÖRNEK: VDD=3.3V için, DAC çikisi 0-VDD olmak üzere, çikista 2.25V elde
+;edilmesi amaciyla DAC kontrol saklayicilarina uygun degerleri yaziniz.
+
+;12 bit deger: 4095*2.25/3.3=2792=0AE8H
+	;org 	0000h
+	;SJMP	BASLA
+;BASLA:
+;MOV ADCCON1, #80H
+;MOV DACCON, #2DH
+;MOV DAC0H, #00AH
+;MOV DAC0L, #0E8H
+	;x:		sjmp	x
+
+;END
+
+
+
+

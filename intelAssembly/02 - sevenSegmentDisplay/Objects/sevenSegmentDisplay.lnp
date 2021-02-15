@@ -1,0 +1,3 @@
+".\Objects\STARTUP.obj" 
+TO ".\Objects\sevenSegmentDisplay" 
+PRINT(".\Listings\sevenSegmentDisplay.m51")
