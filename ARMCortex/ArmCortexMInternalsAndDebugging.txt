@@ -1,0 +1,129 @@
+uVision : 
+ - Project > new uVision project > set location and name 
+   > select the microcontroller ( LM4F120HSQR) 
+   > Selections : 
+	- CMSS : Core
+	- Device : Startup
+	- then okay
+   > open the options for target : 
+	- change the freq : 16 mHz
+	- under debug  : fill the use simulator.
+   > Create new file (main.c)
+   > THAT IS ALL **
+
+############################################################################################
+Cortex-M Memory Map:
+ - In the TM4C123GH6PM Datasheet search the memory map
+
+TM4C123xxx : 
+ - 256k Flash ROM > 0x00000000 : 0x0003FFFF
+ - 32k RAM > 0x20000000 : 0x20007FFF
+ - I/O Ports > 0x40000000 : 0x400FFFFF
+ - Internal I/O PPB > 0xE0000000 : 0xE0041FFF
+
+ENDIAN : 
+ - 16-bits data = 2-bytes dats
+ - Big Endian : Most significant byte is stored at lower address
+ - Little Endian : Least significant byte is stored at lower address
+
+	0x03E8   :   Hexadecimal code
+	0x03 : most significant byte/leftmost byte
+	0xE8 : least significant byte/rightost byte
+
+Storing In Memory : 
+
+    Data     :  0x03E8 (1000)
+    Address  :  0x2000.0608, 0x2000.0681
+
+Big Endian :
+    |    Adresss    |      Data      |
+    | 0x2000.0680   |     0x03       |
+    | 0x2000.0681   |     0xE8       |
+
+
+Little Endian :
+    |    Adresss    |      Data      |
+    | 0x2000.0680   |     0xE8       |
+    | 0x2000.0681   |     0x03       |
+
+ - Some microcontrollers comes with big endian others comes with little endian
+ - Cortex-M uses the little endian
+
+ - GLOBAL VARIABLES STORES IN THE RAM
+ - Chek the ram and rom options from 'options for target' window
+ - in the 'options for target', click to the links and fill : use memory layouts from target dialog
+
+############################################################################################
+
+# on simulation mode we dont need to click load
+# for any debug case, just click to the start/stop debug session
+
+int main(){
+	blablabla;
+}
+############################################################################################
+means of blablabla : 
+
+int counter = 0;
+++counter;
+++counter;
+++counter;
+++counter;
+++counter;
+++counter;
+++counter;
+
+
+
+
+int counter = 0;
+++counter;
+++counter;
+++counter;
+++counter;
+--counter;
+--counter;
+--counter;
+
+
+
+
+while(1){
+    int counter = 0;
+    ++counter;
+    ++counter;  
+    ++counter;
+    ++counter;
+    ++counter;
+    ++counter;
+    --counter;
+    --counter;
+    --counter;
+}
+
+
+
+
+
+int counter = 0;
+while(1){
+
+    while(counter<8){
+        ++counter;     
+    }
+}
+
+
+
+
+
+int counter = 0;
+while(1){
+
+    while(counter<8){
+        ++counter; 
+	if(counter  == 8){
+	    counter = 0;
+	}  
+    }
+}

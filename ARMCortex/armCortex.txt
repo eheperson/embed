@@ -1,0 +1,125 @@
+########################################################################################
+########################   INTRODUCTION TO ARM CORTEX-M   ##############################
+########################################################################################
+ARM COrtex - M : 
+ - A group of 32-Bits processor cores
+ - Licensed by ARM Company
+ - The company does not manufacture processors.
+########################################################################################
+32-Bits :
+ - Internal registers in the register bank are 32-bits
+ - Data paths are 32-bits
+ - Bus interfaces are 32-bits
+########################################################################################
+Bit Size : 
+ - Bit size allows the CPU to adress memory for an individual process.
+ - X-bit can handle 2^x bytes of memory
+ - 8-bits can handle 2^8 = 256 bytes
+ - 16-bits can handle 2^16 = 65536 bytes
+ - 8-bits can handle 2^32 = 4294967296 bytes : 4.2GB 
+ - The higher the bit size the higher performance
+########################################################################################
+Cortex - M Family : 
+ - Cortex-M0 :
+	- Cheapest
+	- Low area 90um
+ - Cortex-M0+ :
+	- Lowest Energy Consumption
+	- 15 years
+ - Cortex-M1 : 
+	- Made for FPGA Application
+ - Cortex-M3 : 
+	- Performance Efficiency
+ - Cortex-M4 :
+	- Digital Signal Control
+	- Floating point Capability
+ - Cortex-M7 : 
+	- Max Digital Signal Process Capability
+	- Flexible memory system
+	- High precision Floating Point
+########################################################################################
+Why Cortex - M :
+ - High Code Density
+ - Requores smaller program size to perform same tasks
+ - Provides great balance of energy efficiency and performance
+ - It has so many interrupts : 240 interrupts
+########################################################################################
+Microprocessor vs Microcontroller : 
+ - Basically a microprocessor has only a CPU i.e. proecssing power
+ - Microcontroller has CPU, ROM, RAM and other peripherals
+ - In simple terms Microprocessors includes, interrups, CPU, interfaces/Ports.
+   On the other hand, microcontrollers includes, internal peripherals, output ports, input ports,
+   RAM, ROM with a microcontroller
+########################################################################################
+########################     THE CORTEX-M ARCHITECTURE    ##############################
+########################################################################################
+
+Load - Store Architecture : 
+ - Cortex-M has seperate data instruction buses hence it is a Harvard architecture.
+   There are two different architectures which are different in way of accessing memory :
+	- Von Neuman(Princeton) Architecture
+	- Harvard Architecture
+   Also the bus structures of the two architectures are different because Harvard architecture
+   has seperate dataand instruction buses. It allows transfer simultaneously of both data and instructions.
+   Von-Neuman architecture has only one bus which is useful for both data and instructions.
+   Therefore, data and instructions have to be scheduled to transfer.
+ - In a load store architecture, if data ain memory t be process, it is first load from memory to
+   registers in the bank. Then processed there before it is written back to memory if needed.
+   This differs from the registermemory architecture which allows operations to be performed in memory
+   as well as in registers.
+ - There is operation between rom and ram. to nay operation.
+
+Registers : 
+ - A register is a storage inside the processor core.
+ - Cortex-Mprocessors have a number of registers inside the processir coore t perform data
+   processing and control
+ - Recisters perform data processing and data control and most of these registers are grouped
+   in a unit called the register bank.
+
+Register Bank : 
+ - The Cortex-M register bank is made up of 16 registers. 
+   13 of these are general purpose registers
+   and 3 are special function registers
+ - The general purpose registers are divided into lower registers and high registers.
+ - The lower registers range from R0 to R8 and then R8 to R12 are the higher registers.
+ - The general purpose registers contain data or adresses
+ - R13 is known as the stack pointer(SP) and it points ti the top element of the stack.
+ - R14 is known as the Link register(LR) and it's used to store the return location for functions.
+ - R15 is known as the Program Counter(PC) it is a readable and writable.
+   Read returns current instruction adress + 4
+   Writing to PC causes a branch operation
+
+Special Registers :
+ - Each registers contain program status and defined operational states and interrupts.
+ - Usually we only access the registers when developing highly complex and low level applications
+   such as embedded operating systems. These registers are :
+    Program Status Registers (PSR)
+    Three interrupt exception
+      Primask
+      Faultmask
+      BasePRI
+    And one Processor Control Register.
+
+Program Status Registers : 
+ - PSR register are composed of three status registers.
+   APSR : Application Program Status Register
+   EPSR : Execution Program Status Register
+   IPSR : Interrupt Program Status Register
+ - These registers can be accessed individually or they can be accessed combined as the PSR.
+
+ASPR
+ - | N | Z | C | V | Q |   Reservved   |
+ - | 31| 30| 29| 28| 27|   26   -   0  |
+ASPR : 
+ - | Reserved  | ISR_Numbers |
+ - | 31  -  9  |    8  -  0  |
+EPSR : 
+ - |  Reserved  | IC I/T | T | Reserved | IC I/IT | Reserved |
+ - |  31  -  26 | 25     | 24| 23 - 15  | 14 - 10 | 9 - 0    |
+
+PSR : 
+ - | N | Z | C | V | Q | IC I/IT | T | IC I/IT | ISR_Numbers |
+
+########################################################################################
+####################   THE ARM CORTEX-M INTERNALS AND DEBUGGING    #####################
+########################################################################################
