@@ -1,0 +1,36 @@
+#include <lcd_test.h>
+
+
+//******************* ANA PROGRAM FONKSÝYONU *******************
+void main ()
+{ 
+   setup_psp(PSP_DISABLED);        // PSP birimi devre dýþý
+   setup_timer_1(T1_DISABLED);     // T1 zamanlayýcýsý devre dýþý
+   setup_timer_2(T2_DISABLED,0,1); // T2 zamanlayýcýsý devre dýþý
+   setup_adc_ports(NO_ANALOGS);    // ANALOG giriþ yok
+   setup_adc(ADC_OFF);             // ADC birimi devre dýþý
+   setup_CCP1(CCP_OFF);            // CCP1 birimi devre dýþý
+   setup_CCP2(CCP_OFF);            // CCP2 birimi devre dýþý
+   mode=5;
+   lcd_init();  // LCD baþlangýç ayarlarý yapýlýyor
+   rtc_init();  // DS1302 baþlangýç ayarlarý yapýlýyor
+   while(1){
+         
+         
+         printf(lcd_putc,"\f  Saat ayarla  ");
+         lcd_gotoxy(1,2);
+         printf(lcd_putc,"  Saat: ");
+         delay_ms(1000);
+         while(input(menu)){
+         saat++;
+         if(saat>23) saat=0;
+         lcd_gotoxy(8,2);
+         printf(lcd_putc,"%02d",saat);
+         
+         
+         }
+         
+
+  }
+}
+

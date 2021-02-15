@@ -1,0 +1,24 @@
+[PROJECT]
+Target=lcd_test.hex
+Processor_Text=PIC16F877A
+CCSVerions=5.007
+Compiler=PCM
+CCSVersion=5.007
+[Target Data]
+FileList=lcd_test.c
+[Directories]
+Include=D:\Program Files (x86)\PICC\Devices\;D:\Program Files (x86)\PICC\Drivers\;C:\Users\mrgunter\Documents\CCS C Projects\lcd_test\
+[C:\Users\mrgunter\Documents\CCS C Projects\lcd_test\lcd_test]
+Type=4
+[mru-list]
+1=lcd_test.c
+[Opened Files]
+1=lcd_test.c
+2=lcd_test.h
+3=DS1302.C
+4=
+[lcd_test.c]
+Type=4
+[Units]
+Count=1
+1=lcd_test (main)

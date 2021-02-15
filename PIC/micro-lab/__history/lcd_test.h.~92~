@@ -1,0 +1,403 @@
+#include <16F877A.h>
+
+#device ADC=10 
+
+#use delay(clock = 4000000)
+
+#define LCD_RS_PIN PIN_D0
+#define LCD_RW_PIN PIN_D1
+#define LCD_ENABLE_PIN PIN_D2
+#define LCD_DATA4 PIN_D3
+#define LCD_DATA5 PIN_D4
+#define LCD_DATA6 PIN_D5
+#define LCD_DATA7 PIN_D6
+
+#define menu PIN_C0
+#define select PIN_C1
+#define done PIN_C2
+#define set PIN_C3
+
+#define alarm PIN_D7
+
+
+
+unsigned long int bilgi;
+float V, T;
+
+#fuses XT, NOWDT, NOPROTECT, NOBROWNOUT, NOLVP, NOPUT, NOCPD, NOPUT, NODEBUG, NOWRT
+
+#include <lcd.c>
+#include <DS1302.c> 
+
+int i;
+int gun=0;
+int ay=0;
+int yil=0;
+int haftanin_gunu=0;
+int saat=0;
+int saniye;
+int dakika=0;
+int mode;
+int saata=13;
+int dakikaa=13;
+int ygun, yay, yyil, yh_g, ys, yd;
+
+
+void set_date();
+void set_alarm();
+void set_clock();
+float get_temp();
+//void check_alarm(int s, int sa, int d, int da);
+void check_alarm();
+
+
+
+
+
+
+void display(){
+   while(!input(menu))
+   {
+      rtc_get_time(saat,dakika,saniye);      
+      rtc_get_date(gun,ay,yil,haftanin_gunu); 
+      printf(lcd_putc,"\f%02d/%02d/20%02d ",gun,ay,yil);
+
+      switch(haftanin_gunu)  
+      {                      
+         case 1: printf(lcd_putc,"PAZ"); break; 
+         case 2: printf(lcd_putc,"PZT"); break; 
+         case 3: printf(lcd_putc,"SAL"); break; 
+         case 4: printf(lcd_putc,"CRS"); break; 
+         case 5: printf(lcd_putc,"PER"); break; 
+         case 6: printf(lcd_putc,"CUM"); break; 
+         case 7: printf(lcd_putc,"CTS"); break; 
+      }
+      printf(lcd_putc,"\n%02d:%02d:%02d %3.1f'C",saat,dakika,saniye,(float)T);
+      delay_ms(150);
+      check_alarm();
+   }
+}
+
+void set_clock(){
+   saat=0;
+   dakika=0;
+   printf(lcd_putc,"\f  Saat Ayari  ");
+   
+   s: 
+   
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"Saat : %2d", saat);
+   mode = 0;
+   while(1){
+      while(mode==0){
+         while(input(select)){
+            saat++;
+            if(saat>23) saat=0;
+            lcd_gotoxy(8,2);
+            printf(lcd_putc,"%2d   ", saat);
+            delay_ms(300);
+              
+         }
+         ys=saat;
+         if(input(menu)){
+            while(input(menu));
+            mode=1;
+            goto d;
+         }
+         
+         if(input(done)){
+            while(input(done));
+            goto end;
+         
+         }
+      }
+      
+   d: 
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"Dakika : %2d   ", dakika); 
+     
+      while(mode==1){
+         while(input(select)){
+            dakika++;
+            if(dakika>59) dakika=0;
+            lcd_gotoxy(10,2);
+            printf(lcd_putc,"%2d", dakika);
+            delay_ms(300);  
+         }
+         yd=dakika;
+         if(input(menu)){
+            while(input(menu));
+            mode=0;
+            goto s;
+         }
+         
+         
+         if(input(done)){
+            while(input(done));
+            mode=0;
+            goto end;
+         
+         }
+      }
+   }
+   end :
+   rtc_set_datetime(gun, ay, yil, haftanin_gunu, saat, dakika);
+   break;
+}
+
+void set_date(){
+   mode=0;
+   gun=0;
+   ay=0;
+   yil=0;
+   haftanin_gunu=1;
+   
+   printf(lcd_putc,"\f  tarih Ayari  ");
+   
+   g: 
+   
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"Gun : %2d", gun);
+   while(1){
+      while(mode==0){
+         while(input(select)){
+            gun++;
+            if(gun>31) saat=0;
+            lcd_gotoxy(7,2);
+            printf(lcd_putc,"%2d   ", gun);
+            delay_ms(300);
+              
+         }
+         
+         if(input(menu)){
+            while(input(menu));
+            mode=1;
+            goto a;
+         }
+         
+         if(input(done)){
+            while(input(done));
+            mode=0;
+            goto end;
+         
+         }
+      }
+      
+   a: 
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"Ay : %2d   ", ay); 
+     
+      while(mode==1){
+         while(input(select)){
+            ay++;
+            if(ay>12) ay=1;
+            lcd_gotoxy(6,2);
+            printf(lcd_putc,"%2d", ay);
+            delay_ms(300);  
+         }
+         if(input(menu)){
+            while(input(menu));
+            mode=2;
+            goto y;
+         }
+         
+         if(input(done)){
+            while(input(done));
+            mode=0;
+            goto end;
+         
+         }
+      }
+
+   y: 
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"Yil : 20%2d   ", yil); 
+     
+      while(mode==2){
+         while(input(select)){
+            yil++;
+            if(yil>30) yil=18;
+            lcd_gotoxy(7,2);
+            printf(lcd_putc,"20%2d", yil);
+            delay_ms(300);  
+         }
+         if(input(menu)){
+            while(input(menu));
+            mode=0;
+            goto g;
+         }  
+      
+         
+         if(input(done)){
+            while(input(done));
+            goto end;
+         
+         }
+      }
+      
+   w: 
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"gun adi : PZT   "); 
+     
+      while(mode==2){
+         while(input(select)){
+            yil++;
+            if(haftanin_gunu>7) haftanin_gunu=1;
+            lcd_gotoxy(10,2);
+      switch(haftanin_gunu)  
+      {                      
+         case 1: printf(lcd_putc,"PZT"); break; 
+         case 2: printf(lcd_putc,"SAL"); break; 
+         case 3: printf(lcd_putc,"CRS"); break; 
+         case 4: printf(lcd_putc,"PERS"); break; 
+         case 5: printf(lcd_putc,"CUM"); break; 
+         case 6: printf(lcd_putc,"CTS"); break; 
+         case 7: printf(lcd_putc,"PAZ"); break; 
+      }
+            delay_ms(300);  
+         }
+         if(input(menu)){
+            while(input(menu));
+            mode=0;
+            goto g;
+         }  
+      
+         
+         if(input(done)){
+            while(input(done));
+            goto end;
+         
+         }
+      }
+   }
+   end :
+   rtc_set_datetime(gun, ay, yil, haftanin_gunu, saat, dakika);
+   break;
+}
+
+
+
+
+
+
+void set_alarm(){
+   saata=0;
+   dakikaa=0;
+   printf(lcd_putc,"\fCalar Saat Ayari");
+   
+   s: 
+   
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"Saat : %2d", saata);
+   mode = 0;
+   while(1){
+      while(mode==0){
+         while(input(select)){
+            saata++;
+            if(saata>23) saata=0;
+            lcd_gotoxy(8,2);
+            printf(lcd_putc,"%2d   ", saata);
+            delay_ms(300);
+              
+         }
+         
+         if(input(menu)){
+            while(input(menu));
+            mode=1;
+            goto d;
+         }
+         
+         if(input(done)){
+            while(input(done));
+            goto end;
+         
+         }
+      }
+      
+   d: 
+   lcd_gotoxy(1,2);
+   printf(lcd_putc,"Dakika : %2d   ", dakikaa); 
+     
+      while(mode==1){
+         while(input(select)){
+            dakikaa++;
+            if(dakikaa>59) dakikaa=0;
+            lcd_gotoxy(10,2);
+            printf(lcd_putc,"%2d", dakikaa);
+            delay_ms(300);  
+         }
+         if(input(menu)){
+            while(input(menu));
+            mode=0;
+            goto s;
+         }
+         
+         
+         if(input(done)){
+            while(input(done));
+            goto end;
+         
+         }
+      }
+   }
+   end :
+   break;
+}
+
+float get_temp(){
+   unsigned long int temp;
+   float Tt, Vt;
+   temp = read_adc (); 
+   Tt = (temp*49+1)/100; 
+   //Vt=(4.88*bilgi)*1023;   
+   //Tt=(Vt/10)+2;    // Her 10mV'ta 1 derece artma
+   delay_us(100);
+   return (float)Tt;
+   
+}
+
+void check_alarm(){
+      while((saat==saata)&&(dakika==dakikaa)){
+         
+         printf(lcd_putc,"\f***  ALARM!  ***");
+         delay_ms(300);
+         output_high(alarm);
+         if(input(menu)||input(select)||input(done)){
+            while(input(menu));
+            while(input(select));
+            while(input(done));
+            dakikaa=dakikaa-2;
+            break;
+         }
+
+      }
+   }
+
+/*
+void check_alarm(int s, int sa, int d, int da){
+
+   if((s==sa)&&(d==da)){
+      while(1){
+         
+         printf(lcd_putc,"\f**ALARM CALIYOR*");
+         delay_ms(300);
+         output_high(alarm);
+         while(input(menu)||input(select)||input(done));
+         if(input(menu)&&input(select)&&input(done)){
+            while(input(menu));
+            while(input(select));
+            while(input(done));
+            dakikaa=dakikaa-2;
+            break;
+         }
+         
+   
+      
+      
+      }
+   }
+      
+   
+}
+
+  */ 

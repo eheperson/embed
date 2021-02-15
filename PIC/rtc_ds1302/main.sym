@@ -1,0 +1,147 @@
+004-005 @WRITE_PROGRAM_MEMORY8.P1
+004-005 @READ_PROGRAM_MEMORY8.P2
+008     PSP_DATA
+015     CCP_1
+015     CCP_1_LOW
+016     CCP_1_HIGH
+01B     CCP_2_LOW
+01B     CCP_2
+01C     CCP_2_HIGH
+020     saniye
+021     dakika
+022     saat
+023     gun
+024     ay
+025     yil
+026     haftanin_gunu
+027     rtc_init.x
+027     lcd_init.i
+027     @PRINTF_D0_638.P1
+027     rtc_set_datetime.day
+027     @PSTRINGCN7_638.P1
+027     rtc_get_date.@SCRATCH1
+027     rtc_get_time.@SCRATCH1
+027     MAIN.@SCRATCH1
+028     @PRINTF_D0_638.P1
+028     rtc_set_datetime.mth
+028     lcd_init.@SCRATCH1
+028     rtc_init.@SCRATCH1
+028     @PSTRINGCN7_638.@SCRATCH1
+029     rtc_set_datetime.year
+029     @PRINTF_D0_638.@SCRATCH1
+029     @PSTRINGCN7_638.@SCRATCH2
+02A     rtc_set_datetime.dow
+02A     @PRINTF_D0_638.@SCRATCH2
+02A     @PSTRINGCN7_638.@SCRATCH3
+02B     read_ds1302.cmd
+02B     rtc_set_datetime.hr
+02B     @PRINTF_D0_638.@SCRATCH3
+02B     @PSTRINGCN7_638.@SCRATCH4
+02C     rtc_set_datetime.min
+02C     read_ds1302.i
+02C     rm_bcd.data
+02C     @PRINTF_D0_638.@SCRATCH4
+02D     get_bcd.data
+02D     read_ds1302.data
+02D     lcd_putc.c
+02D     rm_bcd.i
+02D     rtc_set_datetime.@SCRATCH1
+02E     lcd_gotoxy.x
+02E     @delay_ms1.P1
+02E     get_bcd.nibh
+02E     write_ds1302.cmd
+02E     rm_bcd.@SCRATCH1
+02F     write_ds1302.data
+02F     get_bcd.nibl
+02F     lcd_gotoxy.y
+02F     rm_bcd.@SCRATCH2
+030     write_ds1302_byte.cmd
+030     @DIV88.P1
+030     @MUL88.P2
+030     lcd_gotoxy.address
+030     get_bcd.@SCRATCH1
+031     @DIV88.P1
+031     @MUL88.P2
+031     write_ds1302_byte.i
+031     lcd_gotoxy.@SCRATCH1
+032     lcd_send_byte.address
+032     @DIV88.@SCRATCH1
+033     lcd_send_byte.n
+034     lcd_read_byte.low
+034     lcd_send_byte.@SCRATCH1
+035     lcd_send_nibble.n
+035     lcd_read_byte.high
+036     lcd_read_nibble.n
+036     lcd_read_byte.@SCRATCH1
+037     lcd_read_nibble.@SCRATCH1
+077     @SCRATCH
+078     @SCRATCH
+078     _RETURN_
+079     @SCRATCH
+07A     @SCRATCH
+10D-10E @WRITE_PROGRAM_MEMORY8.P1
+10D-10E @READ_PROGRAM_MEMORY8.P2
+
+ROM Allocation:
+000004  LCD_INIT_STRING.call
+000008  LCD_INIT_STRING.data
+00000C  @const718.call
+000017  @delay_ms1
+00002C  lcd_send_nibble
+000057  lcd_read_nibble
+000088  lcd_send_byte
+000090  lcd_read_byte
+0000E4  lcd_init
+000121  write_ds1302_byte
+000139  write_ds1302
+000148  read_ds1302
+000174  rtc_init
+000196  @DIV88
+0001AB  @MUL88
+0001D0  get_bcd
+0001E7  rtc_set_datetime
+00022F  rm_bcd
+00024A  lcd_gotoxy
+00025C  lcd_putc
+000288  @PRINTF_D0_638
+0002DF  @PSTRINGCN7_638
+000335  @cinit1
+000335  MAIN
+00033A  @cinit2
+00035D  rtc_get_time
+000378  rtc_get_date
+000437  @goto10806
+
+Project Directory:
+    C:\Users\mrgunter\Documents\CCS C Projects\itsme\rtc_ds1302\
+
+Project Files:
+    main.c                                                  [27-Dec-18 13:11  CRC=3B7471C1]
+    D:\Program Files (x86)\PICC\Devices\16f877.h            [21-Jun-13 16:04  CRC=A355A189]
+    D:\Program Files (x86)\PICC\Drivers\lcd.c               [23-Aug-12 09:01  CRC=D28E8746]
+    D:\Program Files (x86)\PICC\Drivers\DS1302.c            [03-Feb-09 09:25  CRC=2438A8CE]
+
+Source signature=F9C9EC2C
+
+Units:
+    main (main)
+
+Compiler Settings:
+    Processor:      PIC16F877
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    XREF file:   main.xsym
+    Errors:      main.err
+    Ext Symbols: main.esym
+    INHX8:       main.hex
+    Symbols:     main.sym
+    List:        main.lst
+    Debug/COFF:  main.cof
+    Project:     main.ccspjt
+    Call Tree:   main.tre
+    Statistics:  main.STA

@@ -1,0 +1,7 @@
+>>> Warning 203 "C:\Users\mrgunter\Documents\CCS C Projects\lcd_test\lcd_test.h" Line 92(1,1): Condition always TRUE
+>>> Warning 203 "C:\Users\mrgunter\Documents\CCS C Projects\lcd_test\lcd_test.h" Line 162(1,1): Condition always TRUE
+>>> Warning 203 "C:\Users\mrgunter\Documents\CCS C Projects\lcd_test\lcd_test.h" Line 294(1,1): Condition always TRUE
+>>> Warning 203 "lcd_test.c" Line 29(1,1): Condition always TRUE
+>>> Warning 203 "lcd_test.c" Line 38(1,1): Condition always TRUE
+>>> Warning 203 "lcd_test.c" Line 52(1,1): Condition always TRUE
+>>> Warning 203 "lcd_test.c" Line 66(1,1): Condition always TRUE

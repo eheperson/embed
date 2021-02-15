@@ -1,0 +1,76 @@
+#include <lcd_test.h>
+
+
+//******************* ANA PROGRAM FONKSÝYONU *******************
+void main ()
+{ 
+   setup_psp(PSP_DISABLED);        // PSP birimi devre dýþý
+   setup_timer_1(T1_DISABLED);     // T1 zamanlayýcýsý devre dýþý
+   setup_timer_2(T2_DISABLED,0,1); // T2 zamanlayýcýsý devre dýþý
+   setup_adc_ports(NO_ANALOGS);    // ANALOG giriþ yok
+   setup_adc(ADC_OFF);             // ADC birimi devre dýþý
+   setup_CCP1(CCP_OFF);            // CCP1 birimi devre dýþý
+   setup_CCP2(CCP_OFF);            // CCP2 birimi devre dýþý
+
+   lcd_init();  
+   rtc_init();  
+      rtc_set_datetime(20,07,07,6,22,52); 
+   while(1){
+      
+      rtc_get_time(saat,dakika,saniye);       
+      rtc_get_date(gun,ay,yil,haftanin_gunu); 
+      printf(lcd_putc,"\fT:%02d/%02d/20%02d ",gun,ay,yil); 
+      printf(lcd_putc,"PAZ");
+      printf(lcd_putc,"\nSaat:%02d:%02d:%02d",saat,dakika,saniye); 
+     
+      
+      if(input(menu)){
+         while(input(menu));
+         printf(lcd_putc,"\f  Saat Ayari");
+         while(1){
+            if(input(menu)) {
+               while(input(menu));
+               break;
+            }
+            if(input(select)){
+               while(input(menu));
+               set_clock();
+               break;
+            }
+         }
+         
+         
+         
+         delay_ms(20);
+         printf(lcd_putc,"\f  Tarih Ayari");
+         while(1){
+            if(input(menu)) 
+               while(input(menu));
+               break;
+            }
+            if(input(select)){
+               while(input(select));
+               set_date();
+               break;
+            }
+         }
+         while(input(menu));
+         delay_ms(20);
+         printf(lcd_putc,"\f  Alarm Ayari");
+         while(1){
+            if(input(menu)){
+               while(input(menu));
+               break;
+            }
+            if(input(select)){
+               while(input(select));
+               set_alarm();
+               break;
+            }
+         
+         }
+      }
+      
+  }
+}
+
