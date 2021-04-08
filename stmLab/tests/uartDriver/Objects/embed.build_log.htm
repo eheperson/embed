@@ -1,0 +1,228 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.33.0.0
+Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: baran kuzu, phiniteLab, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.33.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.33.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.8.0
+Dialog DLL:      TCM.DLL V1.48.0.0
+ 
+<h2>Project:</h2>
+C:\Users\baran\Desktop\stmLab\tests\uartDriver\embed.uvprojx
+Project File Date:  02/13/2021
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'stm32f401re'
+compiling uart.cpp...
+uart.cpp(18): warning:  #177-D: variable "mcal::reg::ahb1enr"  was declared but never referenced
+  			const std::uint32_t ahb1enr =	rcc_base + 0x30;
+uart.cpp(19): warning:  #177-D: variable "mcal::reg::ahb2enr"  was declared but never referenced
+  			const std::uint32_t ahb2enr =	rcc_base + 0x34;
+uart.cpp(20): warning:  #177-D: variable "mcal::reg::ahb3enr"  was declared but never referenced
+  			const std::uint32_t ahb3enr =	rcc_base + 0x38;
+uart.cpp(21): warning:  #177-D: variable "mcal::reg::apb1enr"  was declared but never referenced
+  		 	const std::uint32_t apb1enr = rcc_base+ 0x40;
+uart.cpp(33): warning:  #177-D: variable "mcal::reg::uart1_base"  was declared but never referenced
+  		  const std::uint32_t uart1_base      = 0x40011000;
+uart.cpp(35): warning:  #177-D: variable "mcal::reg::uart6_base"  was declared but never referenced
+  			const std::uint32_t uart6_base      = 0x40011400;
+uart.cpp(53): warning:  #177-D: variable "mcal::reg::gpioa_moder"  was declared but never referenced
+        const std::uint32_t gpioa_moder     = gpioa_base      +  moder_offset;  
+uart.cpp(54): warning:  #177-D: variable "mcal::reg::gpioa_otyper"  was declared but never referenced
+        const std::uint32_t gpioa_otyper    = gpioa_base      +  otyper_offset;  
+uart.cpp(55): warning:  #177-D: variable "mcal::reg::gpioa_ospeedr"  was declared but never referenced
+        const std::uint32_t gpioa_ospeedr   = gpioa_base      +  ospeedr_offset;  
+uart.cpp(56): warning:  #177-D: variable "mcal::reg::gpioa_pupdr"  was declared but never referenced
+        const std::uint32_t gpioa_pupdr     = gpioa_base      +  pupdr_offset;  
+uart.cpp(57): warning:  #177-D: variable "mcal::reg::gpioa_idr"  was declared but never referenced
+        const std::uint32_t gpioa_idr       = gpioa_base      +  idr_offset;  
+uart.cpp(58): warning:  #177-D: variable "mcal::reg::gpioa_odr"  was declared but never referenced
+        const std::uint32_t gpioa_odr       = gpioa_base      +  odr_offset;  
+uart.cpp(59): warning:  #177-D: variable "mcal::reg::gpioa_bsrr"  was declared but never referenced
+        const std::uint32_t gpioa_bsrr      = gpioa_base      +  bsrr_offset;  
+uart.cpp(60): warning:  #177-D: variable "mcal::reg::gpioa_lckr"  was declared but never referenced
+        const std::uint32_t gpioa_lckr      = gpioa_base      +  lckr_offset;  
+uart.cpp(61): warning:  #177-D: variable "mcal::reg::gpioa_afrl"  was declared but never referenced
+        const std::uint32_t gpioa_afrl      = gpioa_base      +  afrl_offset;  
+uart.cpp(62): warning:  #177-D: variable "mcal::reg::gpioa_afrh"  was declared but never referenced
+        const std::uint32_t gpioa_afrh      = gpioa_base      +  afrh_offset;  
+uart.cpp(64): warning:  #177-D: variable "mcal::reg::gpiob_moder"  was declared but never referenced
+        const std::uint32_t gpiob_moder     = gpiob_base      +  moder_offset;  
+uart.cpp(65): warning:  #177-D: variable "mcal::reg::gpiob_otyper"  was declared but never referenced
+        const std::uint32_t gpiob_otyper    = gpiob_base      +  otyper_offset;  
+uart.cpp(66): warning:  #177-D: variable "mcal::reg::gpiob_ospeedr"  was declared but never referenced
+        const std::uint32_t gpiob_ospeedr   = gpiob_base      +  ospeedr_offset;  
+uart.cpp(67): warning:  #177-D: variable "mcal::reg::gpiob_pupdr"  was declared but never referenced
+        const std::uint32_t gpiob_pupdr     = gpiob_base      +  pupdr_offset;  
+uart.cpp(68): warning:  #177-D: variable "mcal::reg::gpiob_idr"  was declared but never referenced
+        const std::uint32_t gpiob_idr       = gpiob_base      +  idr_offset;  
+uart.cpp(69): warning:  #177-D: variable "mcal::reg::gpiob_odr"  was declared but never referenced
+        const std::uint32_t gpiob_odr       = gpiob_base      +  odr_offset;  
+uart.cpp(70): warning:  #177-D: variable "mcal::reg::gpiob_bsrr"  was declared but never referenced
+        const std::uint32_t gpiob_bsrr      = gpiob_base      +  bsrr_offset;  
+uart.cpp(71): warning:  #177-D: variable "mcal::reg::gpiob_lckr"  was declared but never referenced
+        const std::uint32_t gpiob_lckr      = gpiob_base      +  lckr_offset;  
+uart.cpp(72): warning:  #177-D: variable "mcal::reg::gpiob_afrl"  was declared but never referenced
+        const std::uint32_t gpiob_afrl      = gpiob_base      +  afrl_offset;  
+uart.cpp(73): warning:  #177-D: variable "mcal::reg::gpiob_afrh"  was declared but never referenced
+        const std::uint32_t gpiob_afrh      = gpiob_base      +  afrh_offset;  
+uart.cpp(75): warning:  #177-D: variable "mcal::reg::gpioc_moder"  was declared but never referenced
+        const std::uint32_t gpioc_moder     = gpioc_base      +  moder_offset;  
+uart.cpp(76): warning:  #177-D: variable "mcal::reg::gpioc_otyper"  was declared but never referenced
+        const std::uint32_t gpioc_otyper    = gpioc_base      +  otyper_offset;  
+uart.cpp(77): warning:  #177-D: variable "mcal::reg::gpioc_ospeedr"  was declared but never referenced
+        const std::uint32_t gpioc_ospeedr   = gpioc_base      +  ospeedr_offset;  
+uart.cpp(78): warning:  #177-D: variable "mcal::reg::gpioc_pupdr"  was declared but never referenced
+        const std::uint32_t gpioc_pupdr     = gpioc_base      +  pupdr_offset;  
+uart.cpp(79): warning:  #177-D: variable "mcal::reg::gpioc_idr"  was declared but never referenced
+        const std::uint32_t gpioc_idr       = gpioc_base      +  idr_offset;  
+uart.cpp(80): warning:  #177-D: variable "mcal::reg::gpioc_odr"  was declared but never referenced
+        const std::uint32_t gpioc_odr       = gpioc_base      +  odr_offset;  
+uart.cpp(81): warning:  #177-D: variable "mcal::reg::gpioc_bsrr"  was declared but never referenced
+        const std::uint32_t gpioc_bsrr      = gpioc_base      +  bsrr_offset;  
+uart.cpp(82): warning:  #177-D: variable "mcal::reg::gpioc_lckr"  was declared but never referenced
+        const std::uint32_t gpioc_lckr      = gpioc_base      +  lckr_offset;  
+uart.cpp(83): warning:  #177-D: variable "mcal::reg::gpioc_afrl"  was declared but never referenced
+        const std::uint32_t gpioc_afrl      = gpioc_base      +  afrl_offset;  
+uart.cpp(84): warning:  #177-D: variable "mcal::reg::gpioc_afrh"  was declared but never referenced
+        const std::uint32_t gpioc_afrh      = gpioc_base      +  afrh_offset;  
+uart.cpp(86): warning:  #177-D: variable "mcal::reg::gpiod_moder"  was declared but never referenced
+        const std::uint32_t gpiod_moder     = gpiod_base      +  moder_offset;  
+uart.cpp(87): warning:  #177-D: variable "mcal::reg::gpiod_otyper"  was declared but never referenced
+        const std::uint32_t gpiod_otyper    = gpiod_base      +  otyper_offset;  
+uart.cpp(88): warning:  #177-D: variable "mcal::reg::gpiod_ospeedr"  was declared but never referenced
+        const std::uint32_t gpiod_ospeedr   = gpiod_base      +  ospeedr_offset;  
+uart.cpp(89): warning:  #177-D: variable "mcal::reg::gpiod_pupdr"  was declared but never referenced
+        const std::uint32_t gpiod_pupdr     = gpiod_base      +  pupdr_offset;  
+uart.cpp(90): warning:  #177-D: variable "mcal::reg::gpiod_idr"  was declared but never referenced
+        const std::uint32_t gpiod_idr       = gpiod_base      +  idr_offset;  
+uart.cpp(91): warning:  #177-D: variable "mcal::reg::gpiod_odr"  was declared but never referenced
+        const std::uint32_t gpiod_odr       = gpiod_base      +  odr_offset;  
+uart.cpp(92): warning:  #177-D: variable "mcal::reg::gpiod_bsrr"  was declared but never referenced
+        const std::uint32_t gpiod_bsrr      = gpiod_base      +  bsrr_offset;  
+uart.cpp(93): warning:  #177-D: variable "mcal::reg::gpiod_lckr"  was declared but never referenced
+        const std::uint32_t gpiod_lckr      = gpiod_base      +  lckr_offset;  
+uart.cpp(94): warning:  #177-D: variable "mcal::reg::gpiod_afrl"  was declared but never referenced
+        const std::uint32_t gpiod_afrl      = gpiod_base      +  afrl_offset;  
+uart.cpp(95): warning:  #177-D: variable "mcal::reg::gpiod_afrh"  was declared but never referenced
+        const std::uint32_t gpiod_afrh      = gpiod_base      +  afrh_offset;  
+uart.cpp(97): warning:  #177-D: variable "mcal::reg::gpioe_moder"  was declared but never referenced
+        const std::uint32_t gpioe_moder     = gpioe_base      +  moder_offset;  
+uart.cpp(98): warning:  #177-D: variable "mcal::reg::gpioe_otyper"  was declared but never referenced
+        const std::uint32_t gpioe_otyper    = gpioe_base      +  otyper_offset;  
+uart.cpp(99): warning:  #177-D: variable "mcal::reg::gpioe_ospeedr"  was declared but never referenced
+        const std::uint32_t gpioe_ospeedr   = gpioe_base      +  ospeedr_offset;  
+uart.cpp(100): warning:  #177-D: variable "mcal::reg::gpioe_pupdr"  was declared but never referenced
+        const std::uint32_t gpioe_pupdr     = gpioe_base      +  pupdr_offset;  
+uart.cpp(101): warning:  #177-D: variable "mcal::reg::gpioe_idr"  was declared but never referenced
+        const std::uint32_t gpioe_idr       = gpioe_base      +  idr_offset;  
+uart.cpp(102): warning:  #177-D: variable "mcal::reg::gpioe_odr"  was declared but never referenced
+        const std::uint32_t gpioe_odr       = gpioe_base      +  odr_offset;  
+uart.cpp(103): warning:  #177-D: variable "mcal::reg::gpioe_bsrr"  was declared but never referenced
+        const std::uint32_t gpioe_bsrr      = gpioe_base      +  bsrr_offset;  
+uart.cpp(104): warning:  #177-D: variable "mcal::reg::gpioe_lckr"  was declared but never referenced
+        const std::uint32_t gpioe_lckr      = gpioe_base      +  lckr_offset;  
+uart.cpp(105): warning:  #177-D: variable "mcal::reg::gpioe_afrl"  was declared but never referenced
+        const std::uint32_t gpioe_afrl      = gpioe_base      +  afrl_offset;  
+uart.cpp(106): warning:  #177-D: variable "mcal::reg::gpioe_afrh"  was declared but never referenced
+        const std::uint32_t gpioe_afrh      = gpioe_base      +  afrh_offset;  
+uart.cpp(108): warning:  #177-D: variable "mcal::reg::gpiof_moder"  was declared but never referenced
+        const std::uint32_t gpiof_moder     = gpiof_base      +  moder_offset;  
+uart.cpp(109): warning:  #177-D: variable "mcal::reg::gpiof_otyper"  was declared but never referenced
+        const std::uint32_t gpiof_otyper    = gpiof_base      +  otyper_offset;  
+uart.cpp(110): warning:  #177-D: variable "mcal::reg::gpiof_ospeedr"  was declared but never referenced
+        const std::uint32_t gpiof_ospeedr   = gpiof_base      +  ospeedr_offset;  
+uart.cpp(111): warning:  #177-D: variable "mcal::reg::gpiof_pupdr"  was declared but never referenced
+        const std::uint32_t gpiof_pupdr     = gpiof_base      +  pupdr_offset;  
+uart.cpp(112): warning:  #177-D: variable "mcal::reg::gpiof_idr"  was declared but never referenced
+        const std::uint32_t gpiof_idr       = gpiof_base      +  idr_offset;  
+uart.cpp(113): warning:  #177-D: variable "mcal::reg::gpiof_odr"  was declared but never referenced
+        const std::uint32_t gpiof_odr       = gpiof_base      +  odr_offset;  
+uart.cpp(114): warning:  #177-D: variable "mcal::reg::gpiof_bsrr"  was declared but never referenced
+        const std::uint32_t gpiof_bsrr      = gpiof_base      +  bsrr_offset;  
+uart.cpp(115): warning:  #177-D: variable "mcal::reg::gpiof_lckr"  was declared but never referenced
+        const std::uint32_t gpiof_lckr      = gpiof_base      +  lckr_offset;  
+uart.cpp(116): warning:  #177-D: variable "mcal::reg::gpiof_afrl"  was declared but never referenced
+        const std::uint32_t gpiof_afrl      = gpiof_base      +  afrl_offset;  
+uart.cpp(117): warning:  #177-D: variable "mcal::reg::gpiof_afrh"  was declared but never referenced
+        const std::uint32_t gpiof_afrh      = gpiof_base      +  afrh_offset;  
+uart.cpp(119): warning:  #177-D: variable "mcal::reg::gpiog_moder"  was declared but never referenced
+        const std::uint32_t gpiog_moder     = gpiog_base      +  moder_offset;  
+uart.cpp(120): warning:  #177-D: variable "mcal::reg::gpiog_otyper"  was declared but never referenced
+        const std::uint32_t gpiog_otyper    = gpiog_base      +  otyper_offset;  
+uart.cpp(121): warning:  #177-D: variable "mcal::reg::gpiog_ospeedr"  was declared but never referenced
+        const std::uint32_t gpiog_ospeedr   = gpiog_base      +  ospeedr_offset;  
+uart.cpp(122): warning:  #177-D: variable "mcal::reg::gpiog_pupdr"  was declared but never referenced
+        const std::uint32_t gpiog_pupdr     = gpiog_base      +  pupdr_offset;  
+uart.cpp(123): warning:  #177-D: variable "mcal::reg::gpiog_idr"  was declared but never referenced
+        const std::uint32_t gpiog_idr       = gpiog_base      +  idr_offset;  
+uart.cpp(124): warning:  #177-D: variable "mcal::reg::gpiog_odr"  was declared but never referenced
+        const std::uint32_t gpiog_odr       = gpiog_base      +  odr_offset;  
+uart.cpp(125): warning:  #177-D: variable "mcal::reg::gpiog_bsrr"  was declared but never referenced
+        const std::uint32_t gpiog_bsrr      = gpiog_base      +  bsrr_offset;  
+uart.cpp(126): warning:  #177-D: variable "mcal::reg::gpiog_lckr"  was declared but never referenced
+        const std::uint32_t gpiog_lckr      = gpiog_base      +  lckr_offset;  
+uart.cpp(127): warning:  #177-D: variable "mcal::reg::gpiog_afrl"  was declared but never referenced
+        const std::uint32_t gpiog_afrl      = gpiog_base      +  afrl_offset;  
+uart.cpp(128): warning:  #177-D: variable "mcal::reg::gpiog_afrh"  was declared but never referenced
+        const std::uint32_t gpiog_afrh      = gpiog_base      +  afrh_offset;  
+uart.cpp(141): warning:  #177-D: variable "mcal::reg::uart2_brr"  was declared but never referenced
+  			const std::uint32_t uart2_brr      = uart2_base + brr_offset ;
+uart.cpp(142): warning:  #177-D: variable "mcal::reg::uart2_cr1"  was declared but never referenced
+  			const std::uint32_t uart2_cr1      = uart2_base + cr1_offset ;
+uart.cpp(143): warning:  #177-D: variable "mcal::reg::uart2_cr2"  was declared but never referenced
+  			const std::uint32_t uart2_cr2      = uart2_base + cr2_offset ;
+uart.cpp(144): warning:  #177-D: variable "mcal::reg::uart2_cr3"  was declared but never referenced
+  			const std::uint32_t uart2_cr3      = uart2_base + cr3_offset ;
+uart.cpp: 80 warnings, 0 errors
+linking...
+Program Size: Code=528 RO-data=420 RW-data=0 ZI-data=9312  
+".\Objects\embed.axf" - 0 Error(s), 80 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.7.0.pack
+                ARM.CMSIS.5.7.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.4.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F4xx_DFP.2.15.0.pack
+                Keil.STM32F4xx_DFP.2.15.0
+                STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
+   * Component: Startup Version: 2.6.3
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_stm32f401re
+  C:\Users\baran\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include
+  C:\Users\baran\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.4.0
+
+   * Component: Keil::Device:Startup:2.6.3
+      Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
+      Source file:   MDK\Device\Source\ARM\STM32F4xx_OTP.s
+      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f401xe.s
+      Source file:   MDK\Device\Source\ARM\STM32F401xx_OPT.s
+      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

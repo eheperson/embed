@@ -1,0 +1,4 @@
+#ifndef _REGISTERACCESSTEST
+#define _REGISTERACCESSTEST
+
+#endif
